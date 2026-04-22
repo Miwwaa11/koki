@@ -1,0 +1,525 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pindah Ikan - Alfin Aquatic</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Google Sans Flex', 'sans-serif'],
+                    },
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                        },
+                        amber: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Google Sans Flex', sans-serif;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .btn-press:active {
+            transform: scale(0.96);
+        }
+        input, select, textarea {
+            transition: all 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+        }
+        
+        .sidebar-width { width: 280px; }
+        .desktop-main { margin-left: 280px; }
+        @media (max-width: 1024px) {
+            .desktop-main { margin-left: 0; }
+            .sidebar-width { width: 100%; }
+        }
+        @media (min-width: 768px) {
+            .mobile-only { display: none !important; }
+            .desktop-only { display: block !important; }
+        }
+        @media (max-width: 767px) {
+            .desktop-only { display: none !important; }
+            .mobile-only { display: block !important; }
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .sidebar-link:hover {
+            background-color: #f8fafc;
+            color: #059669;
+        }
+        .sidebar-link.active {
+            background: linear-gradient(to right, #ecfdf5, #d1fae5);
+            color: #059669;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased">
+    
+    <!-- ==================== MOBILE VIEW ==================== -->
+    <div class="md:hidden max-w-[414px] mx-auto min-h-screen bg-gradient-to-b from-slate-50 to-white relative shadow-2xl overflow-hidden">
+        
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-5 pt-12 pb-6 rounded-b-3xl shadow-soft relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-cyan-400/20 rounded-full blur-2xl"></div>
+            
+            <div class="relative z-10">
+                <div class="flex justify-between items-center mb-4">
+                    <button onclick="window.location.href='<?php echo e(route('kolam.index')); ?>'" class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all btn-press">
+                        <i class="fas fa-arrow-left text-sm"></i>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all btn-press relative">
+                            <i class="fas fa-bell text-sm"></i>
+                            <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-emerald-600"></span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white shadow-lg">
+                        <i class="fas fa-exchange-alt text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-white text-lg font-bold">Pindah Ikan</h1>
+                        <p class="text-emerald-100 text-xs font-medium">Pindahkan ikan antar kolam</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="px-5 py-6 pb-24 space-y-5">
+            
+            <div class="glass-card rounded-2xl p-5 shadow-card">
+                <form action="<?php echo e(route('pindah-ikan.store')); ?>" method="POST" class="space-y-5">
+                    <?php echo csrf_field(); ?>
+
+                    <!-- Pilih Ikan -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            <i class="fas fa-fish mr-1 text-emerald-500"></i>Pilih Ikan
+                        </label>
+                        <select name="ikan_id" id="ikan_id" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white transition-colors" required>
+                            <option value="">-- Pilih Ikan --</option>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $ikans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ikan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($ikan->id); ?>" data-stok="<?php echo e($ikan->stok); ?>" data-kolam="<?php echo e($ikan->kolam->nama_kolam ?? '-'); ?>" data-kolam-id="<?php echo e($ikan->kolam_id); ?>">
+                                <?php echo e($ikan->jenis_ikan); ?><?php echo e($ikan->ukuran ? ' - ' . $ikan->ukuran : ''); ?> (<?php echo e($ikan->kolam->nama_kolam ?? 'Tanpa Kolam'); ?>)
+                            </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </select>
+                    </div>
+
+                    <!-- Info Stok Saat Ini (akan muncul setelah pilih ikan) -->
+                    <div id="info-stok" class="bg-emerald-50 p-3 rounded-xl hidden">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-slate-600">Stok Tersedia:</span>
+                            <span class="font-bold text-emerald-600" id="stok-tersedia">0 ekor</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-sm text-slate-600">Lokasi Saat Ini:</span>
+                            <span class="font-semibold" id="lokasi-saat-ini">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Jumlah Pindah -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            <i class="fas fa-calculator mr-1 text-emerald-500"></i>Jumlah Ikan Dipindah
+                        </label>
+                        <input type="number" name="jumlah" id="jumlah" min="1" value="1" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white transition-colors" required>
+                        <p class="text-xs text-slate-400 mt-1" id="max-info">Maksimal 0 ekor</p>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['jumlah'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="text-xs text-red-500 mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+
+                    <!-- Kolam Asal (readonly) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Kolam Asal</label>
+                        <input type="text" name="kolam_asal" id="kolam_asal" readonly class="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-600" value="-">
+                    </div>
+
+                    <!-- Kolam Tujuan -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            <i class="fas fa-water mr-1 text-emerald-500"></i>Kolam Tujuan
+                        </label>
+                        <select name="kolam_tujuan_id" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white transition-colors" required>
+                            <option value="">-- Pilih Kolam Tujuan --</option>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $kolams; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kolam): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($kolam->id); ?>">
+                                <?php echo e($kolam->nama_kolam); ?> (<?php echo e($kolam->ukuran ?? '-'); ?>) - Kapasitas <?php echo e(number_format($kolam->kapasitas)); ?>
+
+                            </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </select>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['kolam_tujuan_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="text-xs text-red-500 mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+
+                    <!-- Tanggal Pindah -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            <i class="fas fa-calendar mr-1 text-emerald-500"></i>Tanggal Pindah
+                        </label>
+                        <input type="date" name="tanggal_pindah" value="<?php echo e(date('Y-m-d')); ?>" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white transition-colors" required>
+                    </div>
+
+                    <!-- Keterangan -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                            <i class="fas fa-pen mr-1 text-emerald-500"></i>Keterangan (Opsional)
+                        </label>
+                        <textarea name="keterangan" rows="3" placeholder="Contoh: Pemindahan untuk optimasi populasi" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white transition-colors"></textarea>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="grid grid-cols-2 gap-3 pt-3">
+                        <button type="submit" class="py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition-all btn-press">
+                            <i class="fas fa-check mr-1"></i> Proses Pindah
+                        </button>
+                        <button type="button" onclick="window.location.href='<?php echo e(route('ikan.index')); ?>'" class="py-3 rounded-xl bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200 transition-all btn-press">
+                            <i class="fas fa-times mr-1"></i> Batal
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Informasi Penting -->
+            <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                <div class="flex gap-2">
+                    <i class="fas fa-info-circle text-amber-600 mt-1"></i>
+                    <div>
+                        <p class="text-xs text-amber-800 font-medium">Informasi Pemindahan:</p>
+                        <p class="text-[10px] text-amber-700 mt-1">Stok ikan akan otomatis berkurang di kolam asal dan bertambah di kolam tujuan. Pastikan kolam tujuan memiliki kapasitas yang cukup.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <script>
+            const ikanSelect = document.getElementById('ikan_id');
+            const infoStok = document.getElementById('info-stok');
+            const stokTersedia = document.getElementById('stok-tersedia');
+            const lokasiSaatIni = document.getElementById('lokasi-saat-ini');
+            const jumlahInput = document.getElementById('jumlah');
+            const maxInfo = document.getElementById('max-info');
+            const kolamAsalInput = document.getElementById('kolam_asal');
+
+            ikanSelect.addEventListener('change', function() {
+                const selected = this.options[this.selectedIndex];
+                const stok = parseInt(selected.dataset.stok) || 0;
+                const kolam = selected.dataset.kolam || '-';
+
+                if (stok > 0) {
+                    infoStok.classList.remove('hidden');
+                    stokTersedia.textContent = stok + ' ekor';
+                    lokasiSaatIni.textContent = kolam;
+                    jumlahInput.max = stok;
+                    maxInfo.textContent = 'Maksimal ' + stok + ' ekor';
+                    kolamAsalInput.value = kolam;
+                } else {
+                    infoStok.classList.add('hidden');
+                    kolamAsalInput.value = '-';
+                }
+            });
+        </script>
+        
+        <!-- Bottom Navigation -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-6 py-3 pb-6 z-40 max-w-[414px] mx-auto shadow-soft">
+            <div class="flex justify-around items-center">
+                <a href="<?php echo e(route('dashboard')); ?>" class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-emerald-600 transition-all btn-press">
+                    <i class="fas fa-home text-base"></i><span class="text-[9px] font-medium">Dashboard</span>
+                </a>
+                <a href="<?php echo e(route('ikan.index')); ?>" class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-emerald-600 transition-all btn-press">
+                    <i class="fas fa-fish text-base"></i><span class="text-[9px] font-medium">Ikan</span>
+                </a>
+                <div class="relative -top-6">
+                    <button class="w-14 h-14 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white shadow-lg flex items-center justify-center text-xl">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <a href="<?php echo e(route('kolam.index')); ?>" class="flex flex-col items-center gap-1.5 nav-item-active">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-emerald-100 to-emerald-200">
+                        <i class="fas fa-water text-base text-emerald-600"></i>
+                    </div>
+                    <span class="text-[9px] font-semibold text-emerald-600">Kolam</span>
+                </a>
+                <a href="<?php echo e(route('akun')); ?>" class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-emerald-600 transition-all btn-press">
+                    <i class="fas fa-user text-base"></i><span class="text-[9px] font-medium">Akun</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- ==================== DESKTOP VIEW ==================== -->
+    <div class="hidden md:block">
+        <div class="flex min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50">
+            <aside class="sidebar-width bg-white border-r border-slate-200 flex flex-col fixed h-full shadow-elegant z-50">
+                <div class="px-5 py-4 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <a href="<?php echo e(url('/')); ?>" class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 hover:bg-emerald-200 hover:text-emerald-700 transition-colors flex-shrink-0">
+                            <i class="fas fa-arrow-left text-sm"></i>
+                        </a>
+                        <div class="flex-1 min-w-0">
+                            <img src="<?php echo e(asset('images/alfin2.png')); ?>" alt="Logo" class="w-36 h-auto object-contain">
+                        </div>
+                    </div>
+                </div>
+                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <a href="<?php echo e(route('dashboard')); ?>" class="sidebar-link"><i class="fas fa-home w-5"></i><span>Dashboard</span></a>
+                    <a href="<?php echo e(route('ikan.index')); ?>" class="sidebar-link"><i class="fas fa-fish w-5"></i><span>Data Ikan</span></a>
+                    <a href="<?php echo e(route('kolam.index')); ?>" class="sidebar-link active"><i class="fas fa-water w-5"></i><span>Data Kolam</span></a>
+                    <a href="<?php echo e(route('laporan-stok')); ?>" class="sidebar-link"><i class="fas fa-chart-pie w-5"></i><span>Laporan Stok</span></a>
+                    <a href="<?php echo e(route('akun')); ?>" class="sidebar-link"><i class="fas fa-user w-5"></i><span>Akun Admin</span></a>
+                </nav>
+                <div class="p-4 border-t border-slate-100">
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-slate-800"><?php echo e(Auth::user()->name); ?></p>
+                            <p class="text-[10px] text-slate-500"><?php echo e(Auth::user()->email); ?></p>
+                        </div>
+                        <form method="POST" action="<?php echo e(route('logout')); ?>">
+                            <?php echo csrf_field(); ?>
+                            <button type="submit" class="w-8 h-8 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                                <i class="fas fa-sign-out-alt text-xs"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </aside>
+            
+            <main class="desktop-main flex-1 p-8 overflow-y-auto">
+                <div class="max-w-3xl mx-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                                <i class="fas fa-exchange-alt text-emerald-600"></i> Pindah Ikan Antar Kolam
+                            </h1>
+                            <p class="text-slate-500 text-sm mt-1">Pindahkan ikan dari satu kolam ke kolam lain</p>
+                        </div>
+                        <button class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-emerald-50 transition-colors">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-8 shadow-card">
+                        <form action="<?php echo e(route('pindah-ikan.store')); ?>" method="POST" class="space-y-6">
+                            <?php echo csrf_field(); ?>
+                            
+                            <!-- Grid 2 Kolom -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Pilih Ikan</label>
+                                    <select name="ikan_id" id="ikan_id_desktop" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white" required>
+                                        <option value="">-- Pilih Ikan --</option>
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $ikans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ikan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($ikan->id); ?>" data-stok="<?php echo e($ikan->stok); ?>" data-kolam="<?php echo e($ikan->kolam->nama_kolam ?? '-'); ?>">
+                                            <?php echo e($ikan->jenis_ikan); ?><?php echo e($ikan->ukuran ? ' - ' . $ikan->ukuran : ''); ?> (<?php echo e($ikan->kolam->nama_kolam ?? 'Tanpa Kolam'); ?>)
+                                        </option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Jumlah Dipindah</label>
+                                    <input type="number" name="jumlah" id="jumlah_desktop" min="1" value="1" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white" required>
+                                    <p class="text-xs text-slate-400 mt-1" id="max-info-desktop">Maksimal 0 ekor</p>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['jumlah'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <p class="text-xs text-red-500 mt-1"><?php echo e($message); ?></p>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+                            </div>
+
+                            <!-- Info Stok -->
+                            <div id="info-stok-desktop" class="bg-emerald-50 p-4 rounded-xl grid grid-cols-2 gap-4 hidden">
+                                <div>
+                                    <p class="text-xs text-slate-500">Stok Tersedia</p>
+                                    <p class="text-xl font-bold text-emerald-600" id="stok-tersedia-desktop">0 ekor</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500">Lokasi Saat Ini</p>
+                                    <p class="text-xl font-bold text-slate-800" id="lokasi-saat-ini-desktop">-</p>
+                                </div>
+                            </div>
+
+                            <!-- Grid 2 Kolom Asal Tujuan -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Kolam Asal</label>
+                                    <input type="text" name="kolam_asal" id="kolam_asal_desktop" readonly class="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-600" value="-">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Kolam Tujuan</label>
+                                    <select name="kolam_tujuan_id" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white" required>
+                                        <option value="">-- Pilih Kolam Tujuan --</option>
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $kolams; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kolam): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($kolam->id); ?>">
+                                            <?php echo e($kolam->nama_kolam); ?> (<?php echo e($kolam->ukuran ?? '-'); ?>) - Kapasitas <?php echo e(number_format($kolam->kapasitas)); ?>
+
+                                        </option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                    </select>
+                                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['kolam_tujuan_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                    <p class="text-xs text-red-500 mt-1"><?php echo e($message); ?></p>
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Grid 2 Kolom Tanggal dan Keterangan -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Tanggal Pindah</label>
+                                    <input type="date" name="tanggal_pindah" value="<?php echo e(date('Y-m-d')); ?>" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Keterangan</label>
+                                    <input type="text" name="keterangan" placeholder="Opsional" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/70 focus:bg-white">
+                                </div>
+                            </div>
+
+                            <!-- Info Penting -->
+                            <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                                <div class="flex gap-3">
+                                    <i class="fas fa-info-circle text-amber-600 mt-1"></i>
+                                    <p class="text-sm text-amber-800">Stok akan otomatis berkurang di kolam asal dan bertambah di kolam tujuan.</p>
+                                </div>
+                            </div>
+
+                            <!-- Tombol Aksi -->
+                            <div class="flex gap-3 pt-4">
+                                <button type="submit" class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition-all btn-press">
+                                    <i class="fas fa-check mr-2"></i> Proses Pemindahan
+                                </button>
+                                <button type="button" onclick="window.location.href='<?php echo e(route('ikan.index')); ?>'" class="px-8 py-3 rounded-xl bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200 transition-all btn-press">
+                                    <i class="fas fa-times mr-2"></i> Batal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const ikanSelectDesktop = document.getElementById('ikan_id_desktop');
+        const infoStokDesktop = document.getElementById('info-stok-desktop');
+        const stokTersediaDesktop = document.getElementById('stok-tersedia-desktop');
+        const lokasiSaatIniDesktop = document.getElementById('lokasi-saat-ini-desktop');
+        const jumlahDesktop = document.getElementById('jumlah_desktop');
+        const maxInfoDesktop = document.getElementById('max-info-desktop');
+        const kolamAsalDesktop = document.getElementById('kolam_asal_desktop');
+
+        ikanSelectDesktop.addEventListener('change', function() {
+            const selected = this.options[this.selectedIndex];
+            const stok = parseInt(selected.dataset.stok) || 0;
+            const kolam = selected.dataset.kolam || '-';
+
+            if (stok > 0) {
+                infoStokDesktop.classList.remove('hidden');
+                stokTersediaDesktop.textContent = stok + ' ekor';
+                lokasiSaatIniDesktop.textContent = kolam;
+                jumlahDesktop.max = stok;
+                maxInfoDesktop.textContent = 'Maksimal ' + stok + ' ekor';
+                kolamAsalDesktop.value = kolam;
+            } else {
+                infoStokDesktop.classList.add('hidden');
+                kolamAsalDesktop.value = '-';
+            }
+        });
+    </script>
+</body>
+</html>
+<?php /**PATH C:\xampp1\htdocs\projek-ikan-koki\resources\views/auth/pindah-ikan.blade.php ENDPATH**/ ?>
